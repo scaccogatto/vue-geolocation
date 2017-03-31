@@ -1,5 +1,5 @@
 {
-  "name": "vue-geolocation",
+  "name": "vue-browser-geolocation",
   "version": "0.0.1",
   "description": "simple geolocation plugin",
   "author": {
