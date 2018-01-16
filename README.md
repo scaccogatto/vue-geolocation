@@ -3,6 +3,15 @@
 > ask to your users their coordinates, and wrap them into a Promise
 
 ## Plugin install
+```sh
+yarn add vue-browser-geolocation
+````
+or
+```sh
+npm install vue-browser-geolocation
+````
+
+in  your main.js
 ```
 import VueGeolocation from 'vue-geolocation';
 Vue.install(VueGeolocation);
