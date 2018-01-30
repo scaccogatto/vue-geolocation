@@ -13,8 +13,8 @@ npm install vue-browser-geolocation
 
 in  your main.js
 ```
-import VueGeolocation from 'vue-geolocation';
-Vue.install(VueGeolocation);
+import VueGeolocation from 'vue-browser-geolocation';
+Vue.use(VueGeolocation);
 ```
 
 ## Usage
