@@ -2,6 +2,8 @@
 
 > ask to your users their coordinates, and wrap them into a Promise
 
+[![Build Status](https://travis-ci.org/scaccogatto/vue-geolocation.svg?branch=master)](https://travis-ci.org/scaccogatto/vue-geolocation)
+
 ## Plugin install
 ```sh
 yarn add vue-browser-geolocation
