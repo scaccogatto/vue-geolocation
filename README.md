@@ -22,9 +22,24 @@ Vue.use(VueGeolocation);
 ## Usage
 Inside a Vue Component
 ```
-this.$getLocation()
+this.$getLocation(options)
   .then(coordinates => {
     console.log(coordinates);
   });
 ```
 Will prompt a [Geolocation Request](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation)
+
+### Options
+See [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions)
+
+#### Example
+```
+this.$getLocation({
+	enableHighAccuracy: bool //defaults to false
+	timeout: int //defaults to Infinity,
+	maximumAge //defaults to 0,
+})
+  .then(coordinates => {
+    console.log(coordinates);
+  });
+```
