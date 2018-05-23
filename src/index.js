@@ -3,7 +3,7 @@ const VueGeolocation = {
     // define the main instance function
     Vue.prototype.$getLocation = VueGeolocation.getLocation
   },
-  getLocation () {
+  getLocation (options = {}) {
     return new Promise((resolve, reject) => {
       if (!VueGeolocation._isAvailable()) {
         reject('no browser support')
@@ -17,7 +17,8 @@ const VueGeolocation = {
           },
           () => {
             reject('no position access')
-          }
+          },
+          options
         )
       }
     })
