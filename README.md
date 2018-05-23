@@ -35,9 +35,10 @@ See [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionO
 #### Example
 ```
 this.$getLocation({
-	enableHighAccuracy: bool //defaults to false
-	timeout: int //defaults to Infinity,
-	maximumAge //defaults to 0,
+	enableHighAccuracy: bool, //defaults to false
+	timeout: Infinity, //defaults to Infinity
+	maximumAge: int //defaults to 0
+	
 })
   .then(coordinates => {
     console.log(coordinates);
