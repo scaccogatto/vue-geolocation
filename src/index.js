@@ -56,7 +56,7 @@ const VueGeolocation = {
         resolve(window.navigator.geolocation.clearWatch(watchID))
       }
     })
-  }
+  },
   _isAvailable () {
     return 'geolocation' in window.navigator
   }
