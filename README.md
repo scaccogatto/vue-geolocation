@@ -29,6 +29,24 @@ this.$getLocation(options)
 ```
 Will prompt a [Geolocation Request](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation)
 
+or to watch a location
+
+```
+this.$watchLocation(options)
+  .then(coordinates => {
+    console.log(coordinates);
+  })
+```
+
+you can clear the watcher
+
+```
+this.$clearLocationWatch(watchID)
+```
+
+please refer to the Geolocation docs to reference how to get a watchID
+
+
 ### Options
 See [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions)
 
