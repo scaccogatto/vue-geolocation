@@ -48,7 +48,7 @@ const VueGeolocation = {
   clearLocation (watchID) {
     return new Promise((resolve, reject) => {
       if (!VueGeolocation._isAvailable()) {
-        reject('no browser suppor')
+        reject('no browser support')
       }
       else if (!watchID) {
         reject('please provide watchID')
