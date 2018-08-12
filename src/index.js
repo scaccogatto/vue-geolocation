@@ -14,7 +14,8 @@ const VueGeolocation = {
           position => {
             resolve({
               lat: position.coords.latitude,
-              lng: position.coords.longitude
+              lng: position.coords.longitude,
+              accuracy: position.coords.accuracy
             })
           },
           () => {
@@ -34,7 +35,8 @@ const VueGeolocation = {
           position => {
             resolve({
               lat: position.coords.latitude,
-              lng: position.coords.longitude
+              lng: position.coords.longitude,
+              accuracy: position.coords.accuracy
             })
           },
           () => {
