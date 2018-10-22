@@ -5,8 +5,12 @@ const VueGeolocation = {
     Vue.prototype.$watchLocation = VueGeolocation.watchLocation
     Vue.prototype.$clearLocationWatch = VueGeolocation.clearLocation
   },
-  getLocation (options = {}) {
+  getLocation (options = {}, forceReject = false) {
     return new Promise((resolve, reject) => {
+      if(forceReject) {
+        reject('reject forced for testing purposes')
+        return
+      }
       if (!VueGeolocation._isAvailable()) {
         reject('no browser support')
       } else {
@@ -28,8 +32,12 @@ const VueGeolocation = {
       }
     })
   },
-  watchLocation (options = {}) {
+  watchLocation (options = {}, forceReject = false) {
     return new Promise((resolve, reject) => {
+      if(forceReject) {
+        reject('reject forced for testing purposes')
+        return
+      }
       if (!VueGeolocation._isAvailable()) {
         reject('no browser support')
       } else {
