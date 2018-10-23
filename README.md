@@ -62,3 +62,14 @@ this.$getLocation({
     console.log(coordinates);
   });
 ```
+
+### Forcing failure in automated testing
+
+If you need to setup automated testing in your application, and you need to force failure of geolocation to test how your application behaves, you can pass a second argument (forceReject) to this.$getGelocation and this.$watchLocation:
+
+```
+this.$getLocation(positionOptions, forceReject)
+
+this.$watchLocation(positionOptions, forceReject)
+```
+if the parameter is `true`, the promise will be rejected with a special error message.
