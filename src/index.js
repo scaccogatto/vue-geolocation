@@ -24,8 +24,8 @@ const VueGeolocation = {
               accuracy: position.coords.accuracy
             })
           },
-          () => {
-            reject('no position access')
+          (e) => {
+            reject(e.message)
           },
           options
         )
@@ -53,8 +53,8 @@ const VueGeolocation = {
               speed: position.coords.speed
             })
           },
-          () => {
-            reject('no position access')
+          (e) => {
+            reject(e.message)
           },
           options
         )
