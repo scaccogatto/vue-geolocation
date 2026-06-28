@@ -1,7 +1,7 @@
 {
   "name": "vue-browser-geolocation",
-  "version": "2.0.0",
-  "description": "Tiny, type-safe Geolocation wrapper for Vue 3 — a Promise-based plugin ($getLocation/$watchLocation) and a reactive useGeolocation() composable.",
+  "version": "3.0.0",
+  "description": "Tiny, type-safe Geolocation for Vue 3 — a reactive useGeolocation() composable and standalone Promise-based helpers.",
   "author": {
     "name": "Marco Boffo",
     "email": "marcoboffo.waves@gmail.com"
@@ -19,7 +19,6 @@
     "vue3",
     "geolocation",
     "composable",
-    "plugin",
     "typescript",
     "navigator",
     "coordinates"
@@ -29,8 +28,6 @@
   "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "unpkg": "./dist/index.umd.cjs",
-  "jsdelivr": "./dist/index.umd.cjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -59,7 +56,6 @@
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.1",
     "@vitest/coverage-v8": "^4.1.9",
-    "@vue/test-utils": "^2.4.11",
     "eslint": "^10.6.0",
     "jsdom": "^29.1.1",
     "typescript": "^6.0.3",

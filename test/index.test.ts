@@ -1,7 +1,6 @@
-import { mount } from '@vue/test-utils'
-import { effectScope, nextTick, defineComponent, h } from 'vue'
+import { effectScope } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import VueGeolocation, {
+import {
   clearWatch,
   getLocation,
   GeolocationForcedRejectError,
@@ -259,30 +258,5 @@ describe('useGeolocation', () => {
     })
     scope.stop()
     restore()
-  })
-})
-
-describe('Vue plugin', () => {
-  it('registers global properties via app.use', async () => {
-    harness.setCurrentPosition({
-      type: 'success',
-      position: makePosition({ latitude: 99 }),
-    })
-    let captured: Coordinates | null = null
-    const Comp = defineComponent({
-      async mounted() {
-        captured = await this.$getLocation()
-      },
-      render: () => h('div'),
-    })
-    const wrapper = mount(Comp, { global: { plugins: [VueGeolocation] } })
-    const vm = wrapper.vm as unknown as Record<string, unknown>
-    expect(typeof vm.$getLocation).toBe('function')
-    expect(typeof vm.$watchLocation).toBe('function')
-    expect(typeof vm.$clearLocationWatch).toBe('function')
-    await new Promise((r) => queueMicrotask(() => r(null)))
-    await nextTick()
-    expect(captured).toMatchObject({ lat: 99 })
-    wrapper.unmount()
   })
 })

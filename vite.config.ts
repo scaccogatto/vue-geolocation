@@ -13,21 +13,13 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(import.meta.dirname, 'src/index.ts'),
-      name: 'VueGeolocation',
-      formats: ['es', 'cjs', 'umd'],
-      fileName: (format) =>
-        format === 'es'
-          ? 'index.mjs'
-          : format === 'umd'
-            ? 'index.umd.cjs'
-            : 'index.cjs',
+      // ponytail: no UMD — ESM covers bundlers, CJS keeps Node require() alive
+      formats: ['es', 'cjs'],
+      fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.cjs'),
     },
     rolldownOptions: {
       external: ['vue'],
-      output: {
-        exports: 'named',
-        globals: { vue: 'Vue' },
-      },
+      output: { exports: 'named' },
     },
   },
   test: {
