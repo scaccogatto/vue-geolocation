@@ -2,7 +2,6 @@ import {
   getCurrentScope,
   onScopeDispose,
   ref,
-  type App,
   type Ref,
 } from 'vue'
 
@@ -240,34 +239,5 @@ export const useGeolocation = (
     getLocation: get,
     watchLocation: watch,
     clearWatch: clear,
-  }
-}
-
-/**
- * Vue 3 plugin. Registers the Promise-based helpers as global properties:
- * `$getLocation`, `$watchLocation`, `$clearLocationWatch`.
- *
- * @example
- * ```ts
- * import { createApp } from 'vue'
- * import VueGeolocation from 'vue-browser-geolocation'
- * createApp(App).use(VueGeolocation).mount('#app')
- * ```
- */
-export const VueGeolocation = {
-  install(app: App): void {
-    app.config.globalProperties.$getLocation = getLocation
-    app.config.globalProperties.$watchLocation = watchLocation
-    app.config.globalProperties.$clearLocationWatch = clearWatch
-  },
-}
-
-export default VueGeolocation
-
-declare module 'vue' {
-  interface ComponentCustomProperties {
-    $getLocation: typeof getLocation
-    $watchLocation: typeof watchLocation
-    $clearLocationWatch: typeof clearWatch
   }
 }
