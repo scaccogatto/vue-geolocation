@@ -98,6 +98,19 @@ interface Coordinates {
 }
 ```
 
+## Distance helper
+
+`distanceBetween(a, b)` is a pure, Vue-free haversine helper returning the great-circle distance in meters between two points. It accepts this package's `Coordinates` or a raw `{ latitude, longitude }` pair, mixed or matched.
+
+```ts
+import { distanceBetween } from 'vue-browser-geolocation'
+
+distanceBetween(
+  { latitude: 45.4642, longitude: 9.19 }, // Milan Duomo
+  { latitude: 41.8902, longitude: 12.4922 }, // Rome Colosseum
+) // ≈ 477000 (meters)
+```
+
 ## Options
 
 See [`PositionOptions`](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions) — `{ enableHighAccuracy?, timeout?, maximumAge? }`.

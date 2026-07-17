@@ -2,6 +2,7 @@ import { effectScope } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   clearWatch,
+  distanceBetween,
   getLocation,
   GeolocationForcedRejectError,
   GeolocationUnsupportedError,
@@ -133,10 +134,26 @@ describe('watchLocation (promise + onUpdate)', () => {
     await expect(promise).rejects.toMatchObject({ code: 2 })
   })
 
+  it('ignores a late error after the promise has already settled', async () => {
+    const promise = watchLocation()
+    await Promise.resolve()
+    harness.emitWatch(makePosition({ latitude: 1 }))
+    await promise
+    expect(() => harness.emitWatchError(makeError(2, 'late'))).not.toThrow()
+  })
+
   it('rejects with a forced-reject error when forceReject is true', async () => {
     await expect(watchLocation({}, undefined, true)).rejects.toBeInstanceOf(
       GeolocationForcedRejectError,
     )
+  })
+
+  it('rejects with GeolocationUnsupportedError when unavailable', async () => {
+    const restore = removeGeolocation()
+    await expect(watchLocation()).rejects.toBeInstanceOf(
+      GeolocationUnsupportedError,
+    )
+    restore()
   })
 })
 
@@ -154,6 +171,13 @@ describe('clearWatch', () => {
 })
 
 describe('useGeolocation', () => {
+  it('works without an active effect scope (no auto-dispose registered)', () => {
+    const { coords, error, isWatching } = useGeolocation()
+    expect(coords.value).toBeNull()
+    expect(error.value).toBeNull()
+    expect(isWatching.value).toBe(false)
+  })
+
   it('getLocation updates coords and clears error', async () => {
     const scope = effectScope()
     await scope.run(async () => {
@@ -258,5 +282,54 @@ describe('useGeolocation', () => {
     })
     scope.stop()
     restore()
+  })
+})
+
+describe('distanceBetween', () => {
+  const milanDuomo = { latitude: 45.4642, longitude: 9.19 }
+  const romeColosseum = { latitude: 41.8902, longitude: 12.4922 }
+
+  it('computes the great-circle distance between two known points (#21)', () => {
+    const meters = distanceBetween(milanDuomo, romeColosseum)
+    expect(Math.abs(meters - 477_000) / 477_000).toBeLessThan(0.01) // within 1% of 477 km
+  })
+
+  it('accepts the package Coordinates shape (lat/lng) as well as latitude/longitude', () => {
+    const a: Coordinates = {
+      lat: milanDuomo.latitude,
+      lng: milanDuomo.longitude,
+      altitude: null,
+      altitudeAccuracy: null,
+      accuracy: 0,
+      heading: null,
+      speed: null,
+    }
+    const b: Coordinates = {
+      lat: romeColosseum.latitude,
+      lng: romeColosseum.longitude,
+      altitude: null,
+      altitudeAccuracy: null,
+      accuracy: 0,
+      heading: null,
+      speed: null,
+    }
+    expect(distanceBetween(a, b)).toBeCloseTo(distanceBetween(milanDuomo, romeColosseum), 6)
+  })
+
+  it('returns zero for identical points', () => {
+    expect(distanceBetween(milanDuomo, milanDuomo)).toBe(0)
+  })
+
+  it('returns roughly half the Earth circumference for antipodal points', () => {
+    const point = { latitude: 10, longitude: 20 }
+    const antipode = { latitude: -10, longitude: 20 - 180 }
+    const halfCircumference = Math.PI * 6_371_008.8
+    expect(distanceBetween(point, antipode)).toBeCloseTo(halfCircumference, 0)
+  })
+
+  it('is symmetric: distance(a, b) === distance(b, a)', () => {
+    expect(distanceBetween(milanDuomo, romeColosseum)).toBe(
+      distanceBetween(romeColosseum, milanDuomo),
+    )
   })
 })

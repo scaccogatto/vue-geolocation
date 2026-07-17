@@ -66,6 +66,45 @@ const toCoordinates = (position: GeolocationPosition): Coordinates => ({
 export const isSupported = (): boolean =>
   typeof navigator !== 'undefined' && navigator.geolocation != null
 
+/** A bare lat/lng pair, using the native {@link GeolocationCoordinates} field names. */
+export interface LatLng {
+  latitude: number
+  longitude: number
+}
+
+/** Mean Earth radius in meters (IUGG mean radius). */
+const EARTH_RADIUS_METERS = 6371008.8
+
+const toRadians = (degrees: number): number => (degrees * Math.PI) / 180
+
+const toLatLng = (point: Coordinates | LatLng): LatLng =>
+  'lat' in point
+    ? { latitude: point.lat, longitude: point.lng }
+    : { latitude: point.latitude, longitude: point.longitude }
+
+/**
+ * Great-circle distance between two points, in meters, using the haversine
+ * formula. Pure function, no Vue dependency. (Closes #21.)
+ *
+ * @param a - Either this package's {@link Coordinates} or a raw `{ latitude, longitude }` pair.
+ * @param b - Same shape as `a`.
+ */
+export const distanceBetween = (
+  a: Coordinates | LatLng,
+  b: Coordinates | LatLng,
+): number => {
+  const from = toLatLng(a)
+  const to = toLatLng(b)
+  const lat1 = toRadians(from.latitude)
+  const lat2 = toRadians(to.latitude)
+  const dLat = toRadians(to.latitude - from.latitude)
+  const dLng = toRadians(to.longitude - from.longitude)
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2
+  return 2 * EARTH_RADIUS_METERS * Math.asin(Math.sqrt(h))
+}
+
 /**
  * One-shot location request wrapped in a Promise.
  *

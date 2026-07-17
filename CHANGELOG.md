@@ -6,9 +6,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `distanceBetween(a, b)`: pure haversine great-circle distance helper (meters), accepting either this package's `Coordinates` or a raw `{ latitude, longitude }` pair. No Vue dependency. Closes [#21](https://github.com/scaccogatto/vue-geolocation/issues/21).
+
 ### Changed
 
-- CI now runs the full Node 20 / 22 / 24 matrix again (the workflow had drifted to Node 24 only, though this changelog kept claiming a 20 & 22 matrix).
+- CI now targets Node 24 only, dropping the Node 20 / 22 / 24 matrix (latest LTS, owner decision).
 - Release workflow publishes with `npm publish --provenance` and adds a guard step that skips publishing when `name@version` is already on npm.
 
 ## [2.0.0] - 2026-06-28
