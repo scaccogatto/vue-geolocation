@@ -19,4 +19,18 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm install -g npm@latest
-      - run: npm publish
+      - name: Check if version is already published
+        id: version-check
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          PUBLISHED_VERSION=""
+          if PUBLISHED_VERSION=$(npm view "$NAME@$VERSION" version 2>/dev/null); then :; fi
+          if [ -n "$PUBLISHED_VERSION" ]; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish
+        if: steps.version-check.outputs.published == 'false'
+        run: npm publish --provenance

@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- CI now runs the full Node 20 / 22 / 24 matrix again (the workflow had drifted to Node 24 only, though this changelog kept claiming a 20 & 22 matrix).
+- Release workflow publishes with `npm publish --provenance` and adds a guard step that skips publishing when `name@version` is already on npm.
+
 ## [2.0.0] - 2026-06-28
 
 Full TypeScript rewrite targeting **Vue 3**. This is a major, breaking release.

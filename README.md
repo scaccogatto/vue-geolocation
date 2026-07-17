@@ -3,6 +3,7 @@
 > Tiny, type-safe Geolocation for Vue 3 — a reactive `useGeolocation()` composable and standalone Promise-based helpers.
 
 [![npm version](https://img.shields.io/npm/v/vue-browser-geolocation.svg)](https://www.npmjs.com/package/vue-browser-geolocation)
+[![npm downloads](https://img.shields.io/npm/dm/vue-browser-geolocation)](https://www.npmjs.com/package/vue-browser-geolocation)
 [![CI](https://github.com/scaccogatto/vue-geolocation/actions/workflows/ci.yml/badge.svg)](https://github.com/scaccogatto/vue-geolocation/actions/workflows/ci.yml)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/vue-browser-geolocation)](https://bundlephobia.com/package/vue-browser-geolocation)
 [![license](https://img.shields.io/npm/l/vue-browser-geolocation.svg)](./LICENSE)
@@ -62,6 +63,13 @@ watchLocation()
 | `getLocation(options?)` | `Promise<Coordinates>` | One-shot fetch; updates `coords`/`error`. |
 | `watchLocation(options?)` | `number \| undefined` | Starts a watch, returns its `watchID`. |
 | `clearWatch()` | `void` | Stops the active watch. |
+
+## Why not VueUse's `useGeolocation`?
+
+- Flat, typed `Coordinates` result (`{ lat, lng, accuracy, ... }`) instead of raw `GeolocationCoordinates`/`GeolocationPosition` fields spread across refs.
+- Typed error classes — `GeolocationUnsupportedError` and `GeolocationForcedRejectError` — so you can `instanceof`-check failure modes instead of parsing messages.
+- Built-in `forceReject` testing hook on `getLocation`/`watchLocation` to exercise failure paths without mocking `navigator.geolocation`.
+- Zero dependencies beyond the `vue` peer dependency — no `@vueuse/core` / `@vueuse/shared` pulled in.
 
 ## Standalone functions
 
