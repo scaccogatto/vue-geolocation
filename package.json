@@ -45,14 +45,15 @@
   ],
   "scripts": {
     "build": "vite build",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && npm run typecheck-demo",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
     "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "build-demo": "vite build --config vite.config.demo.ts",
-    "dev-demo": "vite --config vite.config.demo.ts"
+    "dev-demo": "vite --config vite.config.demo.ts",
+    "typecheck-demo": "vue-tsc --noEmit -p tsconfig.demo.json"
   },
   "peerDependencies": {
     "vue": "^3.2.25"
@@ -69,7 +70,8 @@
     "vite": "^8.1.0",
     "vite-plugin-dts": "^5.0.3",
     "vitest": "^4.1.9",
-    "vue": "^3.5.39"
+    "vue": "^3.5.39",
+    "vue-tsc": "^3.3.9"
   },
   "engines": {
     "node": ">=20"
