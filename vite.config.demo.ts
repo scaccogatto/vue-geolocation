@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      'vue-geolocation': resolve(import.meta.dirname, 'src/index.ts'),
+      'vue-browser-geolocation': resolve(import.meta.dirname, 'src/index.ts'),
     },
   },
   build: {

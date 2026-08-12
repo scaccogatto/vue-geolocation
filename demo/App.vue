@@ -5,7 +5,7 @@ import {
   isSupported,
   useGeolocation,
   type Coordinates,
-} from 'vue-geolocation'
+} from 'vue-browser-geolocation'
 
 const { coords, error, isWatching, getLocation, watchLocation, clearWatch } =
   useGeolocation({ enableHighAccuracy: true })
@@ -37,6 +37,16 @@ const travelled = computed(() =>
     ? Math.round(distanceBetween(firstFix.value, coords.value))
     : null,
 )
+
+// GeolocationPositionError carries a numeric `code`, the library's own errors
+// are Error subclasses with a `name` — the union has no field in common.
+const errorLabel = computed(() => {
+  const caught = error.value
+  if (!caught) return null
+  return 'name' in caught
+    ? caught.name
+    : `GeolocationPositionError (code ${caught.code})`
+})
 
 const rows = computed(() =>
   coords.value
@@ -76,8 +86,7 @@ const rows = computed(() =>
     </div>
 
     <p v-if="error" class="error">
-      <code>{{ error.name || 'GeolocationPositionError' }}</code>
-      — {{ error.message }}
+      <code>{{ errorLabel }}</code> — {{ error.message }}
     </p>
 
     <table v-if="rows.length">
