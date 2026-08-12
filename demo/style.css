@@ -1,0 +1,82 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fbfbfa;
+  --fg: #1a1a1a;
+  --muted: #6b6b6b;
+  --line: #e2e2df;
+  --accent: #0f766e;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131315;
+    --fg: #ededeb;
+    --muted: #9a9a97;
+    --line: #2c2c30;
+    --accent: #5eead4;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.6 ui-sans-serif, system-ui, sans-serif;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+  font-family: var(--mono);
+  font-size: 1.5rem;
+}
+
+h2 {
+  margin: 2.5rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.lede {
+  margin: 0 0 2rem;
+  color: var(--muted);
+}
+
+.label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
