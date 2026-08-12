@@ -9,7 +9,7 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['eslint.config.js'],
+          allowDefaultProject: ['eslint.config.js', 'vite.config.demo.ts', 'demo/main.ts'],
         },
         tsconfigRootDir: import.meta.dirname,
       },

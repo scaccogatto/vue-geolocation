@@ -8,6 +8,8 @@
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/vue-browser-geolocation)](https://bundlephobia.com/package/vue-browser-geolocation)
 [![license](https://img.shields.io/npm/l/vue-browser-geolocation.svg)](./LICENSE)
 
+[Live demo](https://scaccogatto.github.io/vue-geolocation/) — ask for a fix, watch position updates, measure the distance travelled.
+
 - **Reactive composable** — `useGeolocation()` for `<script setup>`; auto-clears watches on unmount.
 - **Reactive streaming** — `coords` updates on _every_ position fix, not just the first.
 - **Real errors** — rejects with the full [`GeolocationPositionError`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError) so you can branch on `error.code`.

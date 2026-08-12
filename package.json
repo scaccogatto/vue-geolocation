@@ -50,7 +50,9 @@
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "build-demo": "vite build --config vite.config.demo.ts",
+    "dev-demo": "vite --config vite.config.demo.ts"
   },
   "peerDependencies": {
     "vue": "^3.2.25"
@@ -58,6 +60,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.1",
+    "@vitejs/plugin-vue": "^6.0.8",
     "@vitest/coverage-v8": "^4.1.9",
     "eslint": "^10.6.0",
     "jsdom": "^30.0.1",
