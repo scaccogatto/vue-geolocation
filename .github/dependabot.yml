@@ -13,6 +13,12 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # Stay on TypeScript 6 until TS 7 is supported by typescript-eslint,
+      # vue-tsc and vite-plugin-dts.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
     open-pull-requests-limit: 5
 
   - package-ecosystem: github-actions

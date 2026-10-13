@@ -16,7 +16,6 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "declaration": true,
-    "declarationMap": true,
     "noEmit": true
   },
   "include": ["src", "test", "vite.config.ts"]

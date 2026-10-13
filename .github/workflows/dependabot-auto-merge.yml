@@ -2,25 +2,49 @@ name: Dependabot auto-merge
 
 on: pull_request
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    # Gate on the PR author, not github.actor: the actor can be dependabot[bot]
+    # on a PR it did not author (for example after a rebase request).
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'scaccogatto/vue-geolocation'
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
       - uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
         id: metadata
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - if: >
-          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.metadata.outputs.update-type == 'version-update:semver-minor'
-        run: gh pr merge --auto --squash "${{ github.event.pull_request.number }}"
+      # Patch and minor only. A minor bump of a 0.x dependency can break, so it
+      # waits for a human like a major does. Grouped PRs are checked dependency
+      # by dependency. The merge is queued with --auto and lands only once the
+      # required checks pass.
+      - name: Check eligibility
+        id: eligible
         env:
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          PREVIOUS_VERSION: ${{ steps.metadata.outputs.previous-version }}
+          DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          ok=true
+          case "$UPDATE_TYPE" in
+            version-update:semver-patch) ;;
+            version-update:semver-minor)
+              case "$PREVIOUS_VERSION" in 0.*) ok=false ;; esac
+              if echo "$DEPENDENCIES" | jq -e 'any(.[]; .updateType == "version-update:semver-minor" and ((.prevVersion // "") | startswith("0.")))' > /dev/null; then
+                ok=false
+              fi
+              ;;
+            *) ok=false ;;
+          esac
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+
+      - if: steps.eligible.outputs.ok == 'true'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
