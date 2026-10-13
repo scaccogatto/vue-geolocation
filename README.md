@@ -13,7 +13,7 @@
 - **Reactive composable** — `useGeolocation()` for `<script setup>`; auto-clears watches on unmount.
 - **Reactive streaming** — `coords` updates on _every_ position fix, not just the first.
 - **Real errors** — rejects with the full [`GeolocationPositionError`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError) so you can branch on `error.code`.
-- **Type-safe** — written in TypeScript, ships `.d.ts`. ESM + CJS builds.
+- **Type-safe** — written in TypeScript, ships `.d.ts` for ESM and `.d.cts` for CJS.
 - **Lightweight** — zero runtime dependencies, `vue` is a peer dependency.
 
 ## Install
@@ -55,7 +55,7 @@ watchLocation()
 </template>
 ```
 
-`useGeolocation()` returns reactive refs and automatically clears the active watch when the component unmounts.
+`useGeolocation()` returns reactive refs and automatically clears the active watch when the component unmounts. Every watch error lands in `error`. A `PERMISSION_DENIED` error also stops the watch and resets `isWatching`, so calling `watchLocation()` again retries.
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ watchLocation()
 
 ## Standalone functions
 
-Everything is also importable directly, no Vue instance required:
+Everything is also importable directly, no Vue instance required. `watchLocation(options, onUpdate)` resolves on the first fix with `{ watchID, coordinates }`. If the first callback is an error, the native watch is cleared and the promise rejects. Errors after the first fix are not reported by the promise: use `useGeolocation()` to observe them.
 
 ```ts
 import {
@@ -126,21 +126,17 @@ await getLocation({}, true) // rejects
 await watchLocation({}, undefined, true) // rejects
 ```
 
-## Migrating from v2 (plugin API)
-
-v3 drops the `VueGeolocation` plugin and the `$getLocation / $watchLocation / $clearLocationWatch` global properties — use `useGeolocation()` or the standalone functions directly.
-
 ## Migrating from v1 (Vue 2)
 
-v2/v3 target **Vue 3 only**. Breaking changes from v1:
+v3 targets **Vue 3 only** (there was never a published v2). Breaking changes from v1:
 
 | v1 (Vue 2) | v3 (Vue 3) |
 | --- | --- |
-| `Vue.use(VueGeolocation)` | use `useGeolocation()` composable |
-| `reject(error.message)` (string) | `reject(error)` — full `GeolocationPositionError`; read `error.code` |
+| `Vue.use(VueGeolocation)` and `$getLocation` / `$watchLocation` / `$clearLocationWatch` | `useGeolocation()` composable or the standalone functions, no plugin |
+| `reject(error.message)` (string) | `reject(error)`: full `GeolocationPositionError`, read `error.code` |
 | `$watchLocation()` resolved once | `watchLocation(options, onUpdate)` resolves with `{ watchID, coordinates }` and streams via `onUpdate` ([#15](https://github.com/scaccogatto/vue-geolocation/issues/15)) |
 | no composable | reactive `useGeolocation()` |
-| plain JS, no types | TypeScript, ships `.d.ts` |
+| plain JS, no types | TypeScript, ships `.d.ts` / `.d.cts` |
 
 If you cannot migrate to Vue 3 yet, stay on `vue-browser-geolocation@1.8.0`.
 
