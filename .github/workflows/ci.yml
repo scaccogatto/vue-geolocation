@@ -39,3 +39,12 @@ jobs:
 
       - name: Build demo
         run: npm run build-demo
+
+      # The engines floor is Node 22: run the suite there too, inside this
+      # job so the required "Node 24" check keeps its name.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Test (Node 22)
+        run: node --version && npm test
