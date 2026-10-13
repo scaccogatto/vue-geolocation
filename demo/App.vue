@@ -82,17 +82,18 @@ const rows = computed(() =>
       <button type="button" :disabled="!isWatching" @click="clearWatch">
         clearWatch()
       </button>
-      <span class="label">{{ isWatching ? 'watching' : 'idle' }}</span>
+      <span class="label" role="status">{{ isWatching ? 'watching' : 'idle' }}</span>
     </div>
 
-    <p v-if="error" class="error">
+    <p v-if="error" class="error" role="alert">
       <code>{{ errorLabel }}</code> — {{ error.message }}
     </p>
 
     <table v-if="rows.length">
+      <caption class="visually-hidden">Latest position fix</caption>
       <tbody>
         <tr v-for="[key, value] in rows" :key="key">
-          <th>{{ key }}</th>
+          <th scope="row">{{ key }}</th>
           <td>{{ value ?? '—' }}</td>
         </tr>
       </tbody>
@@ -100,7 +101,7 @@ const rows = computed(() =>
     <p v-else class="muted">No fix yet.</p>
 
     <h2>distanceBetween</h2>
-    <p>
+    <p role="status">
       Great-circle distance from the first fix of this session:
       <strong v-if="travelled !== null">{{ travelled }} m</strong>
       <span v-else class="muted">waiting for a second fix</span>
@@ -152,5 +153,17 @@ td {
 
 .muted {
   color: var(--muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>
