@@ -134,6 +134,16 @@ describe('watchLocation (promise + onUpdate)', () => {
     await expect(promise).rejects.toMatchObject({ code: 2 })
   })
 
+  it('clears the native watch when it rejects before the first fix', async () => {
+    const updates: Coordinates[] = []
+    const promise = watchLocation({}, (c) => updates.push(c))
+    harness.emitWatchError(makeError(1, 'denied'))
+    await expect(promise).rejects.toMatchObject({ code: 1 })
+    expect(harness.geolocation.clearWatch).toHaveBeenCalledWith(1)
+    harness.emitWatch(makePosition({ latitude: 5 }))
+    expect(updates).toEqual([])
+  })
+
   it('ignores a late error after the promise has already settled', async () => {
     const promise = watchLocation()
     await Promise.resolve()
@@ -243,6 +253,35 @@ describe('useGeolocation', () => {
       watch()
       harness.emitWatchError(makeError(3, 'timeout'))
       expect(error.value).toMatchObject({ code: 3, message: 'timeout' })
+    })
+    scope.stop()
+  })
+
+  it('resets the watch after PERMISSION_DENIED so a later call can retry', () => {
+    const scope = effectScope()
+    scope.run(() => {
+      const { error, isWatching, watchLocation: watch } = useGeolocation()
+      const first = watch()
+      harness.emitWatchError(makeError(1, 'denied'))
+      expect(error.value).toMatchObject({ code: 1 })
+      expect(isWatching.value).toBe(false)
+      expect(harness.geolocation.clearWatch).toHaveBeenCalledWith(first)
+      const second = watch()
+      expect(second).not.toBe(first)
+      expect(harness.geolocation.watchPosition).toHaveBeenCalledTimes(2)
+      expect(isWatching.value).toBe(true)
+    })
+    scope.stop()
+  })
+
+  it('keeps watching after a transient watch error', () => {
+    const scope = effectScope()
+    scope.run(() => {
+      const { isWatching, watchLocation: watch } = useGeolocation()
+      watch()
+      harness.emitWatchError(makeError(3, 'timeout'))
+      expect(isWatching.value).toBe(true)
+      expect(harness.geolocation.clearWatch).not.toHaveBeenCalled()
     })
     scope.stop()
   })

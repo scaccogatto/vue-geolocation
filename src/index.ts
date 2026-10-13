@@ -143,6 +143,11 @@ export const getLocation = (
  * To receive *every* subsequent update, pass an `onUpdate` callback — the
  * promise alone cannot deliver more than one value. (Fixes #15.)
  *
+ * If the watch fails before the first fix, the native watch is cleared and
+ * the promise rejects with the error. Errors raised after the first fix are
+ * not reported here: use {@link useGeolocation} to observe them through its
+ * `error` ref.
+ *
  * For a fully reactive experience prefer {@link useGeolocation}.
  *
  * @param options - Standard {@link PositionOptions}.
@@ -176,6 +181,9 @@ export const watchLocation = (
       (error) => {
         if (!settled) {
           settled = true
+          // The caller never receives the watchID on rejection, so stop the
+          // native watch here or it would keep running with no way to clear it.
+          navigator.geolocation.clearWatch(watchID)
           reject(error)
         }
       },
@@ -198,7 +206,7 @@ export interface UseGeolocationReturn {
   coords: Ref<Coordinates | null>
   /** Latest error, or `null` while everything is fine. */
   error: Ref<GeolocationError | null>
-  /** Whether a watch is currently active. */
+  /** Whether a watch is currently active (reset when permission is denied). */
   isWatching: Ref<boolean>
   /** One-shot fetch; updates `coords`/`error` and resolves with the value. */
   getLocation: (options?: PositionOptions) => Promise<Coordinates>
@@ -263,6 +271,9 @@ export const useGeolocation = (
       },
       (caught) => {
         error.value = caught
+        // A denied permission ends the watch for good: reset the state so a
+        // later watchLocation() starts a fresh watch (and a fresh prompt).
+        if (caught.code === caught.PERMISSION_DENIED) clear()
       },
       options,
     )
