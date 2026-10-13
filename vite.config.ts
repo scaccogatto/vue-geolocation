@@ -12,6 +12,9 @@ export default defineConfig({
       // demo/App.vue while scanning the root and switches to the Vue
       // processor, which needs @vue/language-core.
       processor: 'ts',
+      // index.d.ts types the ESM entry, index.d.cts the CJS one, so
+      // require() consumers under node16/nodenext get CJS declarations.
+      outDirs: ['dist', { dir: 'dist', moduleFormat: 'cjs' }],
     }),
   ],
   build: {

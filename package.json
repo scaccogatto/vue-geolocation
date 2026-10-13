@@ -19,7 +19,6 @@
     "vue3",
     "composition-api",
     "typescript",
-    "vite",
     "geolocation",
     "gps",
     "composable",
@@ -31,12 +30,17 @@
   "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -53,18 +57,21 @@
     "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "build-demo": "vite build --config vite.config.demo.ts",
     "dev-demo": "vite --config vite.config.demo.ts",
-    "typecheck-demo": "vue-tsc --noEmit -p tsconfig.demo.json"
+    "typecheck-demo": "vue-tsc --noEmit -p tsconfig.demo.json",
+    "lint:package": "publint --strict && attw --pack ."
   },
   "peerDependencies": {
     "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.5",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vitest/coverage-v8": "^5.0.4",
     "eslint": "^10.6.0",
     "jsdom": "^30.0.1",
+    "publint": "^0.3.25",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.2",
     "vite": "^8.3.4",
